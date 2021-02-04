@@ -10,6 +10,7 @@ void pintarTablero(char c[3][3]);
 int jugadaUsuario(char c[3][3]);
 int jugadaMaquina(char c[3][3]);
 int verificarResultado(char c[3][3], int i, int j);
+void refrescaTablero(char c[3][3]);
 
 const int JUGADOR_GANADOR = 1;
 const int SEGUIR_JUGANDO = 0;
@@ -20,7 +21,7 @@ int main()
     char c[3][3]; // Tablero de caracteres 3x3
 
     loop(c);
-    //system("pause");
+    system("pause");
     return 0;
 }
 
@@ -33,9 +34,8 @@ void loop(char c[3][3])
 
     do
     {
-        system("cls");
-        pintarTablero(c);
-
+        refrescaTablero(c);
+        
         if (i % 2 == 0)
         {
             resul = jugadaUsuario(c);
@@ -47,6 +47,8 @@ void loop(char c[3][3])
 
         i++;
     } while (i <= 9 && resul == SEGUIR_JUGANDO);
+    
+    refrescaTablero(c);
 
     printf("Ya hay un ganador. Terminó la partida\n\n");
 }
@@ -227,8 +229,83 @@ int jugadaMaquina(char c[3][3])
 
 /* Comprueba si con el tablero c hay ya un ganador establecido. En ese caso devuelve un 1, en otro un 0. */
 int verificarResultado(char c[3][3], int i, int j) {
-    int resul;
-    //resul = JUGADOR_GANADOR;
-    resul = SEGUIR_JUGANDO;
+    int resul = SEGUIR_JUGANDO;
+    char marca = c[i][j]; // Tipo de marca del jugador (X) o la máquina (O)   
+
+    // Verificamos la horizontales
+    switch (i)
+    {
+    case 0: // Primera fila
+        if ((c[i + 1][j] == marca) && (c[ i + 2][j] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+        
+        // Verificamos también para i = 0 la primera diagonal hasta i = 2
+        /*if ((c[i + 1][j + 1] == marca) && (c[ i + 2][j + 2] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }*/
+
+        break;
+    case 1: // Segunda fila
+        if ((c[i - 1][j] == marca) && (c[ i + 1][j] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+
+        // Verificamos también para i = 1 y j = 1 (doble diagonal)
+        /*if ((j == 1) && (c[i - 1][j - 1] == marca) && (c[ i + 1][j + 1] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }*/
+        break;
+    case 2: // Tercera fila
+        if ((c[i - 1][j] == marca) && (c[i - 2][j] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+
+        // Verificamos también para i = 2 y j = 2 (doble diagonal)
+        /**/
+        break;
+    default:
+        break;
+    }
+
+    // Verificamos la verticales
+    switch (j)
+    {
+    case 0: // Primera fila
+        if ((c[i][j + 1] == marca) && (c[i][j + 2] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+        
+        break;
+    case 1: // Segunda fila
+        if ((c[i][j - 1] == marca) && (c[i][j + 1] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+
+        break;
+    case 2: // Tercera fila
+        if ((c[i][j - 1] == marca) && (c[i][j - 2] == marca))
+        {
+            resul = JUGADOR_GANADOR; 
+        }
+
+        break;
+    default:
+        break;
+    }  
+    
     return resul;   
+}
+
+/* Elimina y repinta el tablero */
+void refrescaTablero(char c[3][3]) {
+    system("cls");
+    pintarTablero(c);
 }
